@@ -6,11 +6,11 @@
 							<li><a <?php $this->is_active_tab('stats') ?>href="<?php echo $this->url ?>/?mlurl&tab=stats">stats</a></li>
 						<?php endif ?>
 						<?php if($perm >= 2): ?>
-							<li><a <?php $this->is_active_tab('mlurls') ?>href="<?php echo $this->url ?>/?mlurl&tab=mlurls">mlurls</a></li>
+							<li><a <?php $this->is_active_tab('mlurls', 'edit_mlurl') ?>href="<?php echo $this->url ?>/?mlurl&tab=mlurls">mlurls</a></li>
 						<?php endif ?>
 						<li><a <?php $this->is_active_tab('account') ?>href="<?php echo $this->url ?>/?mlurl&tab=account">account</a>
 						<?php if($perm >= 10): ?>
-							<li><a <?php $this->is_active_tab('admin') ?>href="<?php echo $this->url ?>/?mlurl&tab=admin">admin</a>
+							<li><a <?php $this->is_active_tab('admin', 'delete_user', 'edit_user') ?>href="<?php echo $this->url ?>/?mlurl&tab=admin">admin</a>
 						<?php endif ?>
 						<li><a id="logout" href="<?php echo $this->url ?>/?mlurl&logout">logout</a></li>
 					<?php else: ?>

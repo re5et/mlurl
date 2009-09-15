@@ -23,7 +23,7 @@
 				<td><a href="<?php echo $target ?>"><?php echo $target ?></a></td>
 				<td><a href="<?php echo $this->url ?>/?mlurl&tab=stats&mlurl_id=<?php echo $url['id'] ?>">stats</a></td>
 				<?php if($this->get_perm() >= 9): ?>
-					<td><a href="<?php echo $this->url ?>/?mlurl&tab=mlurls&action=edit&mlurl_id=<?php echo $url['id'] ?>">edit</a></td>
+					<td><a href="<?php echo $this->url ?>/?mlurl&tab=edit_mlurl&mlurl_id=<?php echo $url['id'] ?>">edit</a></td>
 					<td><a href="<?php echo $this->url ?>/?mlurl&tab=mlurls&action=delete&mlurl_id=<?php echo $url['id'] ?>">delete</a></td>
 				<?php endif ?>
 			</tr>

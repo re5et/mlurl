@@ -25,7 +25,7 @@
 	}
 	else
 	{
-		$q = "SELECT * FROM urls";
+		$q = "SELECT * FROM urls ORDER BY id DESC";
 		$this->current_urls = $this->db->query($q);
 		$this->view('mlurls');
 	}

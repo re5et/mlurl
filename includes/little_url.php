@@ -108,7 +108,8 @@ class little_url{
 	
 	function perm_check($level)
 	{
-		if($this->get_perm() < $level){
+		if($this->get_perm() < $level)
+		{
 			$this->add_msg("You can't do that.", 'error');
 			$this->redirect($this->url . '/?mlurl');
 		}
@@ -119,6 +120,7 @@ class little_url{
 	{
 		$ok_tabs = array(
 			'create_new',
+			'edit_mlurl',
 			'mlurls',
 			'stats',
 			'account',
@@ -157,11 +159,116 @@ class little_url{
 
 	}
 	
-	function is_active_tab($tab)
+	function create_mlurl($target, $name)
 	{
-		if($tab == $this->tab)
+		$this->update_mlurl($target, $name);
+	}
+	
+	function update_mlurl($target, $name = false, $editting = false)
+	{
+		if($editting)
+			$editting = (int) $editting;
+		
+		$target = $this->weak_url_check($target);
+		
+		$target = htmlentities($this->db->escape($target));
+		
+		$name = htmlentities($this->db->escape($name));
+		
+		$q = "SELECT id FROM urls WHERE target = '{$target}'";
+		
+		if($name)
 		{
-			echo ' class="active"';
+			$id = hexdec($name);
+			$q .= " OR named = '{$name}' OR id = '{$id}'";
+		}
+		
+		$q .= " LIMIT 1";
+		
+		$check = $this->db->value($q);
+		
+		if(!$check && !$editting)
+		{
+			$q = "INSERT INTO urls VALUES('','{$target}','{$name}')";
+			$this->db->query($q);
+			$this->add_msg('Added url: ' . $this->get_target($this->db->insert_id) . $this->get_link($this->db->insert_id, $name), 'success');
+		}
+		elseif($check && !$editting)
+		{
+			$this->add_msg("This url is either already in the system, or the name specified is already taken: " . $this->make_link($check, $name), 'error');
+		}
+		elseif($editting > 0)
+		{
+			$q = "SELECT id FROM urls WHERE named = '{$name}'";
+			if($this->db->value($q))
+			{
+				$this->add_msg("The name '$name' is already taken, sorry.", 'error');
+			}
+			else
+			{
+				$q = "UPDATE urls SET target = '{$target}', named = '{$name}' WHERE id = '{$editting}'";
+				$this->db->query($q);
+				$this->add_msg('Updated mlurl.', 'success');
+			}
+		}
+	}
+	
+	function create_user()
+	{
+		
+	}
+	
+	function update_user($email, $permission, $user_id = false)
+	{
+		$email = $this->db->escape($email);
+		$permission = (int) $permission;
+		
+		$q = "SELECT id FROM users WHERE email = '{$email}'";
+		if($user_id){
+			$q .= " AND id != '{$user_id}'";
+		}
+		$email_check = $this->db->value($q);
+
+		if(!$email_check)
+		{
+			$permission = (int) $permission;
+			if($permission > 9)
+			{
+				$this->add_msg('You have sneakily attempted to make a user as powerful as yourself, this is a mistake so I am stopping you.', 'error');
+				$this->redirect();
+			}
+			
+			if(!$user_id)
+			{
+				$password = substr(sha1(mt_rand()), 0, 8);
+				$password_hash = sha1($password);
+				$q = "INSERT INTO users VALUES('', '{$email}', '{$password_hash}', '{$permission}')";
+				$this->db->query($q);
+				$this->add_msg("New user created, email sent to $email $password", 'success');
+				$email_text = "You have been granted a mlurl account by <a href=\"$this->url\">$this->url</a>.\n\n  You can login here: $this->url \n\n  With the following password: $password";
+				mail($email, "$this->url mlurl account", $email_text);
+			}
+			else
+			{
+				$q = "UPDATE users SET email = '{$email}', permission = '$permission' WHERE id = '{$user_id}'";
+				$this->db->query($q);
+				$this->add_msg(htmlentities($email) . ' has been updated.', 'success');
+			}
+		}
+		else
+		{
+			$this->add_msg('There is already a user with that email address', 'error');
+		}			
+	}
+	
+	function is_active_tab()
+	{
+		foreach(func_get_args() as $arg)
+		{
+			if($arg == $this->tab)
+			{
+				echo ' class="active"';
+			}
 		}
 	}
 	
@@ -181,6 +288,23 @@ class little_url{
 		$q = "SELECT target FROM urls WHERE id = '{$id}' LIMIT 1";
 		$target = $this->db->value($q);
 		return $target;
+	}
+	
+	function weak_url_check($url){
+		
+		if(!strpos($url, '://'))
+		{
+			$url = 'http://' . $url;
+		}
+		if(!preg_match('/[\w]+:\/\/[\w]+\./', $url))
+		{
+			$this->add_msg("That didn't really look anything like a url.", 'error');
+			$this->redirect();
+		}
+		else
+		{
+			return $url;
+		}
 	}
 	
 	function mlurl_redirect()
@@ -207,6 +331,12 @@ class little_url{
 		
 		if($id)
 		{
+			$target = $this->get_target($id);
+			$link = $this->get_link($id);
+			if($target === $link)
+			{
+				die('This redirect redirects to itself.  This is an interrupt to prevent an internet explosion.');
+			}
 			$this->record_hit($id);
 			$this->redirect($this->get_target($id));
 		}
@@ -238,7 +368,7 @@ class little_url{
 	function make_link($id, $name = false)
 	{
 		$ref = ($name) ? $name : dechex($id);
-		$link = '<a href="'. $this->url . $ref .'">'. $this->url . $ref .'</a><span>(goes to: ' . $this->get_target($id) . ')</span>';
+		$link = '<a href="'. $this->url . $ref .'">'. $this->url . $ref .'</a> <span>(goes to: ' . $this->get_target($id) . ')</span>';
 		return $link;
 	}
 	
@@ -259,8 +389,9 @@ class little_url{
 	{
 		if(!$to)
 		{
-			$to = $this->url . '?' . $_SERVER['QUERY_STRING'];
+			$to = $this->url . '/?' . $_SERVER['QUERY_STRING'];
 		}
+
 		header("Location: $to");
 		die;
 	}

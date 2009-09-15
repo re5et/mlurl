@@ -135,9 +135,12 @@ table td{
 p.submit{
 	margin:10px 0 0 210px;
 }
-p.submit input{
+p.submit input, p.center input{
 	font-size:16px;
 	padding:4px 10px;
+}
+p.center{
+	text-align:center;
 }
 #goes-to{
 	display:block;

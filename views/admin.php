@@ -21,12 +21,16 @@
 <ul>
 	<?php foreach($users as $user): ?>
 		<li>
-			<span>
-				<a href="<?php echo $this->url ?>/?mlurl&tab=edit_user&user=<?php echo urlencode($user['email']) ?>">edit</a>
-			</span>
-			<span>
-				<a href="<?php echo $this->url ?>/?mlurl&tab=delete_user&user=<?php echo urlencode($user['email']) ?>">delete</a>
-			</span>			
+			<?php if($user['permission'] < 10): ?>
+				<span>
+					<a href="<?php echo $this->url ?>/?mlurl&tab=edit_user&user=<?php echo $user['id'] ?>">edit</a>
+				</span>
+				<span>
+					<a href="<?php echo $this->url ?>/?mlurl&tab=delete_user&user=<?php echo $user['id'] ?>">delete</a>
+				</span>
+			<?php else: ?>
+				<span>admin</span>
+			<?php endif ?>			
 			<span>
 				<?php echo $user['email'] ?>
 			</span>

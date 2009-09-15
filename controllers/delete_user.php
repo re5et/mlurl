@@ -4,13 +4,13 @@
 	
 	if(isset($_GET['user']))
 	{
-		$user_email = $this->db->escape($_GET['user']);
-		$q = "SELECT id FROM users WHERE email = '{$user_email}'";
-		$user_check = $this->db->query($q);
+		$id = (int) $_GET['user'];
+		$q = "SELECT email FROM users WHERE id = '{$id}'";
+		$user_check = $this->db->value($q);
 		if($user_check)
 		{
 			$data = array(
-				'email'	=> htmlentities($user_email)
+				'email'	=> htmlentities($user_check)
 			);
 			$this->view('delete_user', $data);
 		}

@@ -9,7 +9,7 @@
 	elseif(isset($_GET['mlurl_id']))
 	{
 		$id = (int) $_GET['mlurl_id'];
-		$q = "SELECT * FROM urls WHERE id = '{$id}'";
+		$q = "SELECT * FROM {$this->db->prefix}urls WHERE id = '{$id}'";
 		$mlurl = $this->db->row($q);
 		if(is_array($mlurl)){
 			$data = array(

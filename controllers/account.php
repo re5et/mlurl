@@ -1,10 +1,10 @@
 <?php
 
-	$this->perm_check(1);
+	$this->perm_check(2);
 
 	if(isset($_POST['update_account_info']))
 	{
-		$q = "SELECT id FROM users WHERE email = '{$this->session->email}'";
+		$q = "SELECT id FROM {$this->db->prefix}users WHERE email = '{$this->session->email}'";
 		$user_id = $this->db->value($q);
 		
 		$email = empty($_POST['email_address']) ? $this->session->email : $this->db->escape($_POST['email_address']);
@@ -27,7 +27,7 @@
 		{
 			$password = $this->session->password;
 		}
-		$q = "UPDATE users SET email = '{$email}', password = '{$password}' WHERE id = '{$user_id}'";
+		$q = "UPDATE {$this->db->prefix}users SET email = '{$email}', password = '{$password}' WHERE id = '{$user_id}'";
 		$this->db->query($q);
 		$this->add_msg('Updated your account information.', 'success');
 		$this->redirect();

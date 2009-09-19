@@ -1,5 +1,5 @@
 <?php $this->view('header') ?>
-<h2>Reset your password:</h2>
+<h2>Reset your password</h2>
 <form action="<?php echo $this->url ?>/?mlurl&tab=reset_password" method="post">
 	<p>
 		<label for="email_password_reset">email address:</label>

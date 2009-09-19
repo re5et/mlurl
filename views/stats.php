@@ -11,7 +11,7 @@
 		</span>
 	</h2>
 <?php else: ?>
-	<h2>states for all mlurls</h2>
+	<h2>stats for all mlurls</h2>
 <?php endif ?>
 <?php if(isset($hits)): ?>
 	<h3>total hits: <?php echo count($hits) ?></h3>
@@ -25,6 +25,6 @@
 		<?php endforeach ?>
 	</ul>
 <?php else: ?>
-	<h3>No one has hit this mlurl yet.</h3>
+	<h3>No one has hit this yet.</h3>
 <?php endif ?>
 <?php $this->view('footer') ?>

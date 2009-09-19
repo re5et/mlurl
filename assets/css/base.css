@@ -8,12 +8,14 @@ h1{
 	font-size:120px;
 	font-weight:bold;
 	text-align:center;
-	margin: 30px 0 0;
+	margin: 30px 0 -28px 0;
 }
 h2{
 	font-size:24px;
 	font-weight:bold;
-	margin:10px 0;
+	margin:15px 0 10px;
+	padding:5px 0;
+	border-bottom:1px solid #DDD;
 	clear:both;
 }
 h3{
@@ -40,7 +42,7 @@ ul li span{
 	padding:0 10px;
 }
 label{
-	width:200px;
+	width:210px;
 	float:left;
 	text-align:right;
 	padding-right:10px;
@@ -104,10 +106,20 @@ table td{
 #body a:hover{
 	color:#F60;
 }
+#subtitle{
+	color:#444;
+	text-align:center;
+	font-size:10px;
+	margin:0;
+	padding:0;
+	border:none;
+	word-spacing:3px;
+}
 #footer{
 	background:#333;
 	padding:5px;
 	font-size:10px;
+	text-align:center;
 }
 #msgs{
 	margin-bottom:20px;
@@ -133,7 +145,7 @@ table td{
 	color:#A33;
 }
 p.submit{
-	margin:10px 0 0 210px;
+	margin:10px 0 0 220px;
 }
 p.submit input, p.center input{
 	font-size:16px;

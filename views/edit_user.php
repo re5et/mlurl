@@ -9,8 +9,8 @@
 		<label for="permission">permission:</label>
 		<select name="permission" id="permission">
 			<option value="9"<?php if($permission >= 9) echo ' selected="selected"' ?>>administrate</option>
-			<option value="2"<?php if($permission == 2) echo ' selected="selected"' ?>>make links + view stats</option>
-			<option value="1"<?php if($permission == 1) echo ' selected="selected"' ?>>make links</option>
+			<option value="3"<?php if($permission == 3) echo ' selected="selected"' ?>>make links + view stats</option>
+			<option value="3"<?php if($permission == 2) echo ' selected="selected"' ?>>make links</option>
 		</select>
 	</p>
 	<p class="submit">

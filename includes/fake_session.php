@@ -79,7 +79,13 @@ class fake_session{
 		}
 	}
 	
-	function destroy()
+	function delete()
+	{
+		setcookie ($this->name, "", time() - 3600);
+		$this->save();
+	}
+	
+	function dump()
 	{
 		$this->data = array();
 		$this->save();

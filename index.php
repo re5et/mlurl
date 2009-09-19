@@ -1,12 +1,17 @@
 <?php
 
-include('includes/fake_session.php');
-include('includes/little_url.php');
-include('includes/db.php');
-
-$lil_url = new little_url(new db(), new fake_session(array(
-	'name'		=>	'two_clurl',
-	'domain'	=>	''
-)));
+foreach(array('fake_session', 'mlurl', 'db', 'installer') as $include)
+{
+	include("includes/$include.php");
+}
+if(file_exists('mlurl-config.php'))
+{
+	include('mlurl-config.php');
+	new mlurl($config);
+}
+else
+{
+	die('Something is wrong, and for that I am sorry =(');
+}
 
 ?>

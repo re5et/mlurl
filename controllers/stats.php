@@ -1,8 +1,10 @@
 <?php
 
-	$this->perm_check(2);
+	$this->perm_check(3);
 
-	$q = "SELECT * FROM hits";
+	$q = "SELECT * FROM {$this->db->prefix}hits";
+
+	$data = array();
 
 	if(isset($_GET['mlurl_id']))
 	{

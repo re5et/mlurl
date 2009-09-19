@@ -1,4 +1,5 @@
 <?php $this->view('header') ?>
+<h2>Update your account</h2>
 <form action="<?php echo $this->url ?>/?mlurl&tab=account" method="post">
 	<p>
 		<label for="email_address">email address:</label>

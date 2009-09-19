@@ -10,13 +10,14 @@
 	elseif(isset($_GET['user']))
 	{
 		$id = (int) $_GET['user'];
-		$q = "SELECT * FROM users WHERE id = '{$id}'";
+		$q = "SELECT * FROM {$this->db->prefix}users WHERE id = '{$id}'";
 		$user = $this->db->row($q);
 
 		if(is_array($user))
 		{
 			if(isset($_GET['reset_password']))
 			{
+				//$this->reset_password($user['id']);
 				$this->add_msg($user['email'] . "'s password has been reset and emailed to them.", 'success');
 				$this->redirect($this->url . '/?mlurl&tab=edit_user&user=' . $user['id']);
 			}

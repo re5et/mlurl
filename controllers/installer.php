@@ -31,14 +31,14 @@
 				$config_output .= "\t" . '$config' . "['session']['name'] = '" . 'mlurl_'. sha1($_SERVER['SCRIPT_FILENAME']) . "';\n";
 				$config_output .= '?>';
 				
-				$f = "mlurl-config.php";
-				$fh = fopen($f, 'w');
-				if(!$fh)
+				if(!is_writable('./'))
 				{
-					$this->add_msg('Could not write to this directory.  Please create a file called "mlurl-config.php" here and place the following in it:', 'erorr');
+					$this->add_msg('Could not write to this directory.  Please create a file called "mlurl-config.php" here and place the following in it:<pre>'.$config_output.'</pre>', 'erorr');
 				}
 				else
 				{
+					$f = "mlurl-config.php";
+					$fh = fopen($f, 'w');
 					fwrite($fh, $config_output);
 					fclose($fh);
 					

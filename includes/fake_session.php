@@ -8,7 +8,7 @@ class fake_session{
 	var $domain		=	'';
 	var $secure		=	false;
 	var $httponly	=	false;
-	var $mcrypt_key	=	'someUNIQUEstringSETbyYou'; // set to false to disable mcrypt encryption
+	var $mcrypt_key	=	'someUNIQUEstringSETbyYOU'; // set to false to disable mcrypt encryption
 	var $mcrypt_iv	=	false;
 	
 	var $data		=	array();

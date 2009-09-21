@@ -20,7 +20,7 @@ class mlurl{
 			$this->db = new db($config['database']);
 			$this->session = new fake_session($config['session']);
 			$this->url = $config['site_url'];
-			$this->salt = $config['salt'];
+			$this->salt = $config['password_salt'];
 		}
 		else
 		{

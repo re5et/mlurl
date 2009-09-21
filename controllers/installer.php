@@ -20,6 +20,7 @@
 			if(!empty($_POST['admin_email']))
 			{
 				$this->db = $db;
+				$this->salt = substr(sha1(mt_rand()), 0, 20);
 				
 				if(!$this->db->value("SELECT value FROM {$this->db->prefix}options WHERE name = 'mlurl_version'"))
 				{
@@ -27,6 +28,8 @@
 					$querys[] = "CREATE TABLE {$this->db->prefix}options (id INT UNSIGNED AUTO_INCREMENT, name TINYTEXT NOT NULL, value TEXT NOT NULL, PRIMARY KEY(id))";
 					$querys[] = "CREATE TABLE {$this->db->prefix}urls (id INT UNSIGNED AUTO_INCREMENT, target TEXT NOT NULL, named TINYTEXT NOT NULL, PRIMARY KEY(id))";
 					$querys[] = "CREATE TABLE {$this->db->prefix}hits (id INT UNSIGNED AUTO_INCREMENT, mlurl_id INT UNSIGNED, ip_address VARCHAR(15) NOT NULL, browser TINYTEXT NOT NULL, browser_version TINYTEXT NOT NULL, referer TEXT NOT NULL, operating_system TEXT NOT NULL, PRIMARY KEY(id))";
+					$guest_pass = sha1($this->salt . 'guest');
+					$querys[] = "INSERT INTO {$this->db->prefix}users VALUES('', 'guest', '{$guest_pass}', '1')";
 	
 					foreach($querys as $query)
 					{
@@ -43,12 +46,10 @@
 
 				$this->session->delete();
 				
-				$this->salt = substr(sha1(mt_rand()), 0, 20);
-				
 				$config_output  = "<?php\n\n";
 				$config_output .= "\t //general settings\n";
 				$config_output .= "\t" . '$config' . "['site_url'] = '" . addcslashes($_POST['site_url'], "'") . "';\n";
-				$config_output .= "\t" . '$config' . "['password_salt'] = '" . $this->salt . "'" . "';\n";
+				$config_output .= "\t" . '$config' . "['password_salt'] = '" . $this->salt . "';\n";
 				$config_output .= "\n\t //database config\n";
 				$config_output .= "\t" . '$config' . "['database']['db_host'] = '" . addcslashes($db->db_host, "'") . "';\n";
 				$config_output .= "\t" . '$config' . "['database']['db_user'] = '" . addcslashes($db->db_user, "'") . "';\n";

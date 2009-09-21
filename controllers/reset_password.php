@@ -13,7 +13,7 @@
 		if($user_id)
 		{
 			$new_pass = substr(sha1(mt_rand()), 0, 8);
-			$pass_hash = sha1($new_pass);
+			$pass_hash = sha1($this->salt . $new_pass);
 			$q = "UPDATE {$this->db->prefix}users SET password = '{$pass_hash}' WHERE id = '$user_id'";
 			$this->db->query($q);
 			$subject = $this->url . " mlurl password reset";

@@ -28,8 +28,6 @@
 					$querys[] = "CREATE TABLE {$this->db->prefix}options (id INT UNSIGNED AUTO_INCREMENT, name TINYTEXT NOT NULL, value TEXT NOT NULL, PRIMARY KEY(id))";
 					$querys[] = "CREATE TABLE {$this->db->prefix}urls (id INT UNSIGNED AUTO_INCREMENT, target TEXT NOT NULL, named TINYTEXT NOT NULL, PRIMARY KEY(id))";
 					$querys[] = "CREATE TABLE {$this->db->prefix}hits (id INT UNSIGNED AUTO_INCREMENT, mlurl_id INT UNSIGNED, ip_address VARCHAR(15) NOT NULL, browser TINYTEXT NOT NULL, browser_version TINYTEXT NOT NULL, referer TEXT NOT NULL, operating_system TEXT NOT NULL, PRIMARY KEY(id))";
-					$guest_pass = sha1($this->salt . 'guest');
-					$querys[] = "INSERT INTO {$this->db->prefix}users VALUES('', 'guest', '{$guest_pass}', '1')";
 	
 					foreach($querys as $query)
 					{
@@ -74,8 +72,8 @@
 					fclose($fh);
 					$fh = fopen('.htaccess', 'w');
 					fwrite($fh, $htaccess_output);
-					fclose($fh);					
-					
+					fclose($fh);
+
 					$this->view('install_complete');
 				}
 				else

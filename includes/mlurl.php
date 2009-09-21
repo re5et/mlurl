@@ -61,6 +61,11 @@ class mlurl{
 		$email = $this->session->email;
 		$password = $this->session->password;
 		
+		if($email == 'guest' && $this->get_option('guests_can_make_urls'))
+		{
+			return true;
+		}
+		
 		if($email && $password)
 		{
 			return $this->login($email, $password);
@@ -112,6 +117,10 @@ class mlurl{
 	
 	function get_perm()
 	{
+		if($this->session->email == 'guest' && $this->get_option('guests_can_make_urls'))
+		{
+			return 1;
+		}
 		$q = "SELECT permission FROM {$this->db->prefix}users WHERE email = '{$this->session->email}'";
 		return (int) $this->db->value($q);
 	}

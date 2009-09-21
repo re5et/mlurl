@@ -127,7 +127,7 @@ class mlurl{
 	
 	function perm_check($level)
 	{
-		if($this->get_perm() < $level)
+		if($this->get_perm() < $level || !$this->authed)
 		{
 			$this->add_msg("You can't do that.", 'error');
 			$this->redirect($this->url . '/?mlurl');
@@ -290,7 +290,7 @@ class mlurl{
 		{
 			$hash = sha1($this->salt . $password);
 		}
-		$q = "UPDATE {$this->db->prefix}users SET password = '{$hash}'";
+		$q = "UPDATE {$this->db->prefix}users SET password = '{$hash}' WHERE id = '{$user_id}'";
 		$this->db->query($q);
 		if($send_email)
 		{

@@ -14,7 +14,7 @@
 		{
 			if($_POST['password'] == $_POST['password_confirm'])
 			{
-				$password = sha1($_POST['password']);
+				$password = sha1($this->salt . $_POST['password']);
 				$this->session->password = $password;
 			}
 			else

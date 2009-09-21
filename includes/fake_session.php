@@ -106,7 +106,7 @@ class fake_session{
 	
 	function delete()
 	{
-		setcookie($this->name, "", time() - 3600);
+		setcookie($this->name, "", mktime(12,0,0,1, 1, 1990));
 	}
 	
 	function dump()

@@ -72,6 +72,11 @@ table th, table td{
 table td{
 	font-size:10px;
 }
+pre{
+	padding:5px;
+	background:#EEE;
+	font-size:10px;
+}
 #container{
 	margin:0 auto;
 	width:700px;

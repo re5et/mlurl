@@ -11,6 +11,7 @@ class mlurl{
 	var $msg 		=	false;
 	var $tab 		=	false;
 	var $url		=	false;
+	var $salt		=	false;
 	
 	function __construct($config, $installing = false)
 	{
@@ -19,10 +20,14 @@ class mlurl{
 			$this->db = new db($config['database']);
 			$this->session = new fake_session($config['session']);
 			$this->url = $config['site_url'];
+			$this->salt = $config['salt'];
 		}
 		else
 		{
-			$this->session = new fake_session();
+			$this->session = new fake_session(array(
+				'name'	=>	'mlurl_install'
+			));
+			return null;
 		}
 		
 		if(isset($_GET['mlurl']))
@@ -34,7 +39,7 @@ class mlurl{
 			}
 			if($installing)
 			{
-				return;
+				return null;
 			}
 			if(isset($_GET['logout']))
 			{
@@ -90,7 +95,7 @@ class mlurl{
 		}
 		elseif(isset($_POST['email']) && isset($_POST['password']))
 		{
-			$this->login($_POST['email'], sha1($_POST['password']));
+			$this->login($_POST['email'], sha1($this->salt . $_POST['password']));
 		}
 		else
 		{
@@ -243,10 +248,10 @@ class mlurl{
 			if(!$user_id)
 			{
 				$password = substr(sha1(mt_rand()), 0, 8);
-				$password_hash = sha1($password);
+				$password_hash = sha1($this->salt . $password);
 				$q = "INSERT INTO {$this->db->prefix}users VALUES('', '{$email}', '{$password_hash}', '{$permission}')";
 				$this->db->query($q);
-				$this->add_msg("New user created, email sent to $email $password", 'success');
+				$this->add_msg("New user created, email sent to $email", 'success');
 				$email_text = "You have been granted a mlurl account by <a href=\"{$this->url}?mlurl\">{$this->url}?mlurl</a>.\n\n  You can login here: {$this->url}?mlurl \n\n  With the following password: $password";
 				mail($email, "$this->url mlurl account", $email_text);
 			}

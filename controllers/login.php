@@ -8,7 +8,7 @@
 	if(isset($_POST['login_as_guest']) && $this->get_option('guests_can_make_urls'))
 	{
 		$this->session->email = 'guest';
-		$this->session->password = sha1('guest');
+		$this->session->password = sha1($this->salt . 'guest');
 		$this->redirect();
 	}
 
@@ -20,7 +20,7 @@
 		}
 		else
 		{
-			$login_check = $this->login($_POST['email'], sha1($_POST['password']));
+			$login_check = $this->login($_POST['email'], sha1($this->salt . $_POST['password']));
 			if($login_check)
 			{
 				$this->add_msg('logged in succesfully.', 'success');

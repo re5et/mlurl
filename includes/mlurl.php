@@ -302,7 +302,7 @@ class mlurl{
 			{
 				$mailto = $_POST['email_password_reset'];
 			}
-			$this->mail($msg, $subject);
+			$this->mail($msg, $subject, $mailto);
 		}
 	}
 	

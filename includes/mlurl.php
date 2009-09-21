@@ -258,7 +258,7 @@ class mlurl{
 				$this->db->query($q);
 				$this->add_msg("New user created, email sent to $email", 'success');
 				$email_text = "You have been granted a mlurl account by <a href=\"{$this->url}?mlurl\">{$this->url}?mlurl</a>.\n\n  You can login here: {$this->url}?mlurl \n\n  With the following password: $password";
-				mail($email, "$this->url mlurl account", $email_text);
+				$this->mail("$this->url mlurl account", $email_text, $email);
 			}
 			else
 			{
@@ -302,7 +302,7 @@ class mlurl{
 			{
 				$mailto = $_POST['email_password_reset'];
 			}
-			$this->mail($msg, $subject, $mailto);
+			$this->mail($subject, $msg, $mailto);
 		}
 	}
 	
@@ -470,14 +470,14 @@ class mlurl{
 		$this->redirect($this->url . '/?mlurl');
 	}
 	
-	function mail($msg, $subject, $email = false)
+	function mail($subject, $msg, $email = false)
 	{
 		if(!$email)
 		{
 			$email = $this->session->email;
 		}
 		$from = "From: mlurl admin <dontreply@{$this->url}>";
-		mail($email, $msg, $subject, $from);
+		mail($email, $subject, $msg, $from);
 	}
 	
 	function add_msg($msg, $type = false)

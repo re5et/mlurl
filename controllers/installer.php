@@ -33,7 +33,7 @@
 				
 				if(!is_writable('./'))
 				{
-					$this->add_msg('Could not write to this directory.  Please create a file called "mlurl-config.php" here and place the following in it:<pre>'.$config_output.'</pre>', 'erorr');
+					$this->add_msg('Could not write to this directory.  Please create a file called "mlurl-config.php" here and place the following in it:<pre>'.htmlentities($config_output).'</pre>', 'error');
 				}
 				else
 				{

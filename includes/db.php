@@ -75,11 +75,12 @@ class db{
 		
 		if(!$results)
 		{
+			die('here');
 			return false;
 		}
 			
 		if(is_array($results) && is_array($results[0]))
-		{					return false;
+		{
 			return $results[0];
 		}
 		else

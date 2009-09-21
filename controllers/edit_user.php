@@ -17,7 +17,7 @@
 		{
 			if(isset($_GET['reset_password']))
 			{
-				//$this->reset_password($user['id']);
+				$this->reset_password($user['id'], false, true);
 				$this->add_msg($user['email'] . "'s password has been reset and emailed to them.", 'success');
 				$this->redirect($this->url . '/?mlurl&tab=edit_user&user=' . $user['id']);
 			}

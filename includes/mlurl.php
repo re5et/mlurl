@@ -190,7 +190,9 @@ class mlurl{
 	function update_mlurl($target, $name = false, $editting = false)
 	{
 		if($editting)
+		{
 			$editting = (int) $editting;
+		}
 		
 		$target = $this->weak_url_check($target);
 		
@@ -236,11 +238,6 @@ class mlurl{
 		}
 	}
 	
-	function create_user()
-	{
-		
-	}
-	
 	function update_user($email, $permission, $user_id = false)
 	{
 		$email = $this->db->escape($email);
@@ -256,9 +253,8 @@ class mlurl{
 		{
 			if(!$user_id)
 			{
-				$password = substr(sha1(mt_rand()), 0, 8);
-				$password_hash = sha1($this->salt . $password);
-				$q = "INSERT INTO {$this->db->prefix}users VALUES('', '{$email}', '{$password_hash}', '{$permission}')";
+				extract($this->get_new_password());
+				$q = "INSERT INTO {$this->db->prefix}users VALUES('', '{$email}', '{$hash}', '{$permission}')";
 				$this->db->query($q);
 				$this->add_msg("New user created, email sent to $email", 'success');
 				$email_text = "You have been granted a mlurl account by <a href=\"{$this->url}?mlurl\">{$this->url}?mlurl</a>.\n\n  You can login here: {$this->url}?mlurl \n\n  With the following password: $password";
@@ -275,6 +271,34 @@ class mlurl{
 		{
 			$this->add_msg('There is already a user with that email address', 'error');
 		}			
+	}
+	
+	function get_new_password($length = 8)
+	{
+		$data['password'] = substr(sha1(mt_rand()), 0, $length);
+		$data['hash'] = sha1($this->salt . $data['password']);
+		return $data;
+	}
+	
+	function reset_password($user_id, $password = false, $send_email = false)
+	{
+		if(!$password)
+		{
+			extract($this->get_new_password());
+		}
+		else
+		{
+			$hash = sha1($this->salt . $password);
+		}
+		$q = "UPDATE {$this->db->prefix}users SET password = '{$hash}'";
+		$this->db->query($q);
+		if($send_email)
+		{
+			$msg  = 'Your password has been reset to: ' . $password;
+			$msg .= "\n\nYou can login here: " . $this->url . '?mlurl&tab=login';
+			$subject = "mlurl password reset";
+			$this->mail($msg, $subject);
+		}
 	}
 	
 	function get_option($name)

@@ -297,6 +297,11 @@ class mlurl{
 			$msg  = 'Your password has been reset to: ' . $password;
 			$msg .= "\n\nYou can login here: " . $this->url . '?mlurl&tab=login';
 			$subject = "mlurl password reset";
+			$mailto = false;
+			if(!$this->session->email)
+			{
+				$mailto = $_POST['email_password_reset'];
+			}
 			$this->mail($msg, $subject);
 		}
 	}

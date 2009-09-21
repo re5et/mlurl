@@ -12,7 +12,7 @@
 		
 		if($user_id)
 		{
-			$this->reset_password($user_id);
+			$this->reset_password($user_id, false, true);
 			$this->add_msg('Your password has been reset and emailed to '. htmlentities($email), 'success');
 		}
 		else

@@ -96,6 +96,11 @@
 		
 	}
 	
-	$this->view('installer');
+	$data = array();
+	if(!is_writable('./'))
+	{
+		$data['writable'] = false;
+	}
+	$this->view('installer', $data);
 
 ?>

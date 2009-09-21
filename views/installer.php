@@ -1,6 +1,13 @@
 <?php if(!isset($this)) die; ?>
 <?php $this->view('header') ?>
 <h2>mlurl installer</h2>
+<?php if(isset($writable)): ?>
+	<div id="msgs">
+		<p class="msg error">
+			<?php echo dirname($_SERVER['SCRIPT_FILENAME']) ?> is not writable.  You <em>can</em> complete the install, but you will have to create a few files on your own, or you can make this writable and <em>then</em> continue.
+		</p>
+	</div>
+<?php endif ?>
 <form action="<?php echo $this->url ?>/?mlurl" method="post">
 	<p>
 		<label for="site_url">site url:</label>

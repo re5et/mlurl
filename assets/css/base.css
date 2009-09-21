@@ -77,6 +77,9 @@ pre{
 	background:#EEE;
 	font-size:10px;
 }
+em{
+	font-style:italic;
+}
 #container{
 	margin:0 auto;
 	width:700px;

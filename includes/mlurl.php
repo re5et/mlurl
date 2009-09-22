@@ -224,17 +224,19 @@ class mlurl{
 		}
 		elseif($editting > 0)
 		{
-			$q = "SELECT id FROM {$this->db->prefix}urls WHERE named = '{$name}' AND id != '{$editting}'";
-			if($this->db->value($q))
+			if($name != '')
 			{
-				$this->add_msg("The name '$name' is already taken, sorry.", 'error');
+				$q = "SELECT id FROM {$this->db->prefix}urls WHERE id != '{$editting}' AND named = '{$name}'";
+				if($this->db->value($q))
+				{
+					$this->add_msg("The name '$name' is already taken, sorry.", 'error');
+					return null;
+				}
 			}
-			else
-			{
-				$q = "UPDATE {$this->db->prefix}urls SET target = '{$target}', named = '{$name}' WHERE id = '{$editting}'";
-				$this->db->query($q);
-				$this->add_msg('Updated mlurl.', 'success');
-			}
+
+			$q = "UPDATE {$this->db->prefix}urls SET target = '{$target}', named = '{$name}' WHERE id = '{$editting}'";
+			$this->db->query($q);
+			$this->add_msg('Updated mlurl.', 'success');
 		}
 	}
 	

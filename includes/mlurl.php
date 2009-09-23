@@ -198,12 +198,18 @@ class mlurl{
 		
 		$target = htmlentities($this->db->escape($target));
 		
-		$name = htmlentities($this->db->escape($name));
+		$name = str_replace(' ', '_', htmlentities($this->db->escape($name)));
 		
 		$q = "SELECT id FROM {$this->db->prefix}urls WHERE target = '{$target}'";
 		
 		if($name)
 		{
+			preg_match('/[\d\w\s-]+/', $name, $matches);
+			if($matches[0] != $name)
+			{
+				$this->add_msg('The name you provided has invalid characters.  Please limit this to letters, numbers, hyphens and underscores.', 'error');
+				return null;
+			}
 			$id = hexdec($name);
 			$q .= " OR named = '{$name}' OR id = '{$id}'";
 		}
@@ -412,7 +418,7 @@ class mlurl{
 		}
 		else
 		{
-			header("HTTP/1.0 404 Not Found");
+			$this->redirect($this->url . '?mlurl');
 		}
 		
 	}

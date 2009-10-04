@@ -447,6 +447,11 @@ class mlurl{
 	{
 		$mlurl = $id;
 		
+		if(isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $this->url) === 0)
+		{
+			return null; // don't record a hit that came from within the mlurl admin 
+		}
+		
 		$server = array(
 			'REMOTE_ADDR', 'HTTP_USER_AGENT', 'HTTP_USER_AGENT', 'HTTP_REFERER'
 		);

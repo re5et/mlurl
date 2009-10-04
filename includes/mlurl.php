@@ -182,11 +182,6 @@ class mlurl{
 
 	}
 	
-	function create_mlurl($target, $name)
-	{
-		$this->update_mlurl($target, $name);
-	}
-	
 	function update_mlurl($target, $name = false, $editting = false)
 	{
 		if($editting)
@@ -244,6 +239,31 @@ class mlurl{
 			$this->db->query($q);
 			$this->add_msg('Updated mlurl.', 'success');
 		}
+		if(isset($_GET['api']))
+		{
+			$this->api_output($this->db->insert_id);
+		}
+	}
+	
+	function api_output($id)
+	{		
+		$output = array();
+		if($id && $this->session->msg['type'] == 'success')
+		{
+			$output['status'] = 'success';
+			$output['mlurl'] = $this->get_link($id);
+			$output['id'] = $id;
+		}
+		else
+		{
+			$output['status'] = 'failed';
+		}
+		$output['msg'] = $this->session->msg['msg'];
+		
+		header('Cache-Control: no-cache, must-revalidate');
+		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+		header('Content-type: text/json');		
+		die(json_encode($output));
 	}
 	
 	function update_user($email, $permission, $user_id = false)
@@ -445,7 +465,7 @@ class mlurl{
 	{
 		$link = $this->get_link($id);
 		$target = $this->get_target($id);
-		return '<a href="'. $link .'">'. $link .'</a> <span>(goes to: ' . $target . ')</span>';
+		return '<a href="'. $link .'">'. $link .'</a><br/><span>( goes to: ' . $target . ' )</span>';
 	}
 	
 	function view($file, $data = false)

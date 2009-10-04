@@ -2,11 +2,15 @@
 
 	$this->perm_check(1);
 
-	if(isset($_POST['url_to_shorten']))
+	if(isset($_REQUEST['url_to_shorten']))
 	{
-		$this->create_mlurl($_POST['url_to_shorten'], $_POST['name_it']);
-
-		$this->redirect();
+		$name = (isset($_REQUEST['name_it'])) ? $_REQUEST['name_it'] : false;
+		$this->update_mlurl($_REQUEST['url_to_shorten'], $name);
+		
+		if(!isset($_REQUEST['api']))
+		{
+			$this->redirect($this->url . '/?mlurl');
+		}
 	}
 	else
 	{

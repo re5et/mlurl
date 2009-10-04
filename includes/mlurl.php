@@ -15,6 +15,7 @@ class mlurl{
 	
 	function __construct($config, $installing = false)
 	{
+
 		if(is_array($config) && !$installing)
 		{
 			$this->db = new db($config['database']);
@@ -29,7 +30,6 @@ class mlurl{
 			));
 			return null;
 		}
-		
 		if(isset($_GET['mlurl']))
 		{
 			if(is_array($this->session->msg))
@@ -64,6 +64,11 @@ class mlurl{
 		if($email == 'guest' && $this->get_option('guests_can_make_urls'))
 		{
 			return true;
+		}
+		
+		if(isset($_GET['auth_token']))
+		{
+			$this->auth_token_login();
 		}
 		
 		if($email && $password)
@@ -108,6 +113,32 @@ class mlurl{
 		}
 	}
 	
+	function auth_token_login()
+	{
+		$token = $this->db->escape($_GET['auth_token']);
+		$q = "SELECT * FROM {$this->db->prefix}auth_tokens WHERE auth_token = '{$token}'";
+		$results = $this->db->row($q);
+		$user = $results['user_id'];
+		if($user > 0)
+		{
+			$q = "SELECT * FROM {$this->db->prefix}users WHERE id = '{$user}'";
+			$user_info = $this->db->row($q);
+			$this->session->email = $user_info['email'];
+			$this->session->password = $user_info['password'];
+
+			$q = "DELETE FROM {$this->db->prefix}auth_tokens WHERE auth_token = '{$token}'";
+			$this->db->query($q);
+
+			$this->add_msg('You are logged in using an authorization token, you should update your password.', 'success');
+			$this->redirect($this->url . '/?mlurl&tab=account');
+		}
+		else
+		{
+			$this->add_msg('Invalid authorization token, did you already use it up?');
+			return false;
+		}
+	}
+	
 	function logout()
 	{
 		$this->session->dump();
@@ -147,7 +178,7 @@ class mlurl{
 			'edit_user',
 			'delete_user',
 			'login',
-			'reset_password',
+			'forgot_password',
 			'register',
 			'installer'
 		);
@@ -334,6 +365,17 @@ class mlurl{
 		}
 	}
 	
+	function send_auth_token($id, $email)
+	{
+		$token = sha1(mt_rand());
+		$q = "INSERT INTO {$this->db->prefix}auth_tokens VALUES('', '{$id}', '{$token}')";
+		$this->db->query($q);
+		
+		$subject = "you forgot your mlurl password.";
+		$msg = "Click here, it will be fine: " . $this->url . '/?mlurl&auth_token=' . $token;
+		$this->mail($subject, $msg, $email); 
+	}
+	
 	function get_option($name)
 	{
 		$name = $this->db->escape($name);
@@ -509,7 +551,9 @@ class mlurl{
 		{
 			$email = $this->session->email;
 		}
-		$from = "From: mlurl admin <dontreply@{$this->url}>";
+		$url = split('/', $this->url);
+		$url = $url[2];
+		$from = "From: mlurl admin <dontreply@$url>";
 		mail($email, $subject, $msg, $from);
 	}
 	

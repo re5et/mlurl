@@ -5,15 +5,17 @@
 		$email = $this->db->escape($_POST['email_password_reset']);
 		
 		if($email == 'guest')
+		{
 			$this->huh();
-		
+		}
+
 		$q = "SELECT id FROM {$this->db->prefix}users WHERE email = '{$email}'";
 		$user_id = $this->db->value($q);
-		
+
 		if($user_id)
 		{
-			$this->reset_password($user_id, false, true);
-			$this->add_msg('Your password has been reset and emailed to '. htmlentities($email), 'success');
+			$this->send_auth_token($user_id, $email);
+			$this->add_msg('An authorization token has emailed to '. htmlentities($email), 'success');
 		}
 		else
 		{
@@ -23,6 +25,6 @@
 		$this->redirect();
 	}
 	
-	$this->view('reset_password');
+	$this->view('forgot_password');
 
 ?>

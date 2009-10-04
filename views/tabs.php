@@ -21,7 +21,7 @@
 						<?php if($this->get_option('allow_registration')): ?>
 							<li><a <?php $this->is_active_tab('register') ?>href="<?php echo $this->url ?>/?mlurl&tab=register">register</a></li>
 						<?php endif ?>
-						<li><a <?php $this->is_active_tab('reset_password') ?>href="<?php echo $this->url ?>/?mlurl&tab=reset_password">reset password</a></li>
+						<li><a <?php $this->is_active_tab('forgot_password') ?>href="<?php echo $this->url ?>/?mlurl&tab=forgot_password">forgot password?</a></li>
 					<?php endif ?>
 				</ul>
 			<?php endif ?>

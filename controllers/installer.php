@@ -28,6 +28,7 @@
 					$querys[] = "CREATE TABLE {$this->db->prefix}options (id INT UNSIGNED AUTO_INCREMENT, name TINYTEXT NOT NULL, value TEXT NOT NULL, PRIMARY KEY(id))";
 					$querys[] = "CREATE TABLE {$this->db->prefix}urls (id INT UNSIGNED AUTO_INCREMENT, target TEXT NOT NULL, named TINYTEXT NOT NULL, PRIMARY KEY(id))";
 					$querys[] = "CREATE TABLE {$this->db->prefix}hits (id INT UNSIGNED AUTO_INCREMENT, mlurl_id INT UNSIGNED, ip_address VARCHAR(15) NOT NULL, browser TINYTEXT NOT NULL, browser_version TINYTEXT NOT NULL, referer TEXT NOT NULL, operating_system TEXT NOT NULL, PRIMARY KEY(id))";
+					$querys[] = "CREATE TABLE {$this->db->prefix}auth_tokens (id INT UNSIGNED AUTO_INCREMENT, user_id INT UNSIGNED, auth_token VARCHAR(40) NOT NULL, PRIMARY KEY(id))";
 	
 					foreach($querys as $query)
 					{

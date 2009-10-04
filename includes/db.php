@@ -75,7 +75,6 @@ class db{
 		
 		if(!$results)
 		{
-			die('here');
 			return false;
 		}
 			

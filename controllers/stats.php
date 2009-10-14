@@ -13,7 +13,7 @@
 		$data = array(
 			'mlurl'			=>	$id,
 			'mlurl_link'	=>	$this->get_link($id),
-			'mlurl_target'	=>	$this->get_target($id)
+			'mlurl_target'	=>	htmlentities($this->get_target($id))
 		);
 	}
 	

@@ -21,6 +21,7 @@ class mlurl{
 			$this->db = new db($config['database']);
 			$this->session = new fake_session($config['session']);
 			$this->url = $config['site_url'];
+			$this->redirect_url = $config['redirect_url'];
 			$this->salt = $config['password_salt'];
 		}
 		else
@@ -222,12 +223,12 @@ class mlurl{
 		
 		$target = $this->weak_url_check($target);
 		
-		$target = htmlentities($this->db->escape($target));
+		$target = $this->db->escape($target);
 		
-		$name = str_replace(' ', '_', htmlentities($this->db->escape($name)));
+		$name = str_replace(' ', '_', $this->db->escape($name));
 		
-		$q = "SELECT id FROM {$this->db->prefix}urls WHERE target = '{$target}'";
-		
+		$check = false;
+
 		if($name)
 		{
 			preg_match('/[\d\w\s-]+/', $name, $matches);
@@ -236,18 +237,38 @@ class mlurl{
 				$this->add_msg('The name you provided has invalid characters.  Please limit this to letters, numbers, hyphens and underscores.', 'error');
 				return null;
 			}
-			$id = hexdec($name);
-			$q .= " OR named = '{$name}' OR id = '{$id}'";
+			if(preg_match('/^[a-f0-9]+$/i', $name))
+			{
+				$id = hexdec($name);
+			}
+			else
+			{
+				$id = 0;
+			}
+			$q = "SELECT id FROM {$this->db->prefix}urls WHERE named = '{$name}' OR id = '{$id}' LIMIT 1";
+			$check = $this->db->value($q);
 		}
-		
-		$q .= " LIMIT 1";
-		
-		$check = $this->db->value($q);
 		
 		if(!$check && !$editting)
 		{
-			$q = "INSERT INTO {$this->db->prefix}urls VALUES('','{$target}','{$name}')";
-			$this->db->query($q);
+			$insert = "INSERT INTO {$this->db->prefix}urls VALUES('','{$target}','{$name}')";
+			$this->db->query($insert);
+			$url_ok = false;
+			while(!$url_ok)
+			{
+				$hex_check = dechex($this->db->insert_id);
+				$q = "SELECT id FROM {$this->db->prefix}urls WHERE named = '{$hex_check}'";
+				if($this->db->query($q))
+				{
+					$q = "DELETE FROM {$this->db->prefix}urls WHERE id = '{$this->db->insert_id}'";
+					$this->db->query($q);
+					$this->db->query($insert);
+				}
+				else
+				{
+					$url_ok = true;
+				}
+			}
 			$this->add_msg('Added mlurl: ' . $this->make_link($this->db->insert_id), 'success');
 		}
 		elseif($check && !$editting)
@@ -412,7 +433,7 @@ class mlurl{
 	
 	function get_link($id, $name = false)
 	{
-		$link = $this->url . '/';
+		$link = $this->redirect_url . '/';
 		
 		$q = "SELECT named FROM {$this->db->prefix}urls WHERE id = '{$id}'";
 		$name = $this->db->value($q);
@@ -476,7 +497,7 @@ class mlurl{
 				die('This redirect redirects to itself.  This is an interrupt to prevent an internet explosion.');
 			}
 			$this->record_hit($id);
-			$this->redirect($this->get_target($id));
+			$this->redirect($target);
 		}
 		else
 		{
@@ -511,7 +532,7 @@ class mlurl{
 	function make_link($id)
 	{
 		$link = $this->get_link($id);
-		$target = $this->get_target($id);
+		$target = htmlentities($this->get_target($id));
 		return '<a href="'. $link .'">'. $link .'</a><br/><span>( goes to: ' . $target . ' )</span>';
 	}
 	

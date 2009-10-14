@@ -15,23 +15,14 @@
 
 		if(is_array($user))
 		{
-			if(isset($_GET['reset_password']))
+			if($user['permission'] < 10)
 			{
-				$this->reset_password($user['id'], false, true);
-				$this->add_msg($user['email'] . "'s password has been reset and emailed to them.", 'success');
-				$this->redirect($this->url . '/?mlurl&tab=edit_user&user=' . $user['id']);
+				$this->view('edit_user', $user);
 			}
 			else
 			{
-				if($user['permission'] < 10)
-				{
-					$this->view('edit_user', $user);
-				}
-				else
-				{
-					$this->add_msg($user['email'] . ' is far too powerful to be editted.', 'error');
-					$this->redirect($this->url . '/?mlurl&tab=admin');
-				}
+				$this->add_msg($user['email'] . ' is far too powerful to be editted.', 'error');
+				$this->redirect($this->url . '/?mlurl&tab=admin');
 			}
 		}
 	}

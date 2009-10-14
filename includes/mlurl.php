@@ -378,17 +378,17 @@ class mlurl{
 			$msg .= "\n\nYou can login here: " . $this->url . '?mlurl&tab=login';
 			$subject = "mlurl password reset";
 			$mailto = false;
-			if(!$this->session->email)
-			{
-				$mailto = $_POST['email_password_reset'];
-			}
+			
+			$user = $this->get_user($user_id);
+			$mailto = $user['email'];
+			
 			$this->mail($subject, $msg, $mailto);
 		}
 	}
 	
 	function send_auth_token($id, $email)
 	{
-		$token = sha1(mt_rand());
+		$token = sha1(mt_rand() . $this->salt);
 		$q = "INSERT INTO {$this->db->prefix}auth_tokens VALUES('', '{$id}', '{$token}')";
 		$this->db->query($q);
 		
@@ -447,6 +447,12 @@ class mlurl{
 		$q = "SELECT target FROM {$this->db->prefix}urls WHERE id = '{$id}' LIMIT 1";
 		$target = $this->db->value($q);
 		return $target;
+	}
+	
+	function get_user($id)
+	{
+		$q = "SELECT * FROM {$this->db->prefix}users WHERE id = '{$id}'";
+		return $this->db->row($q);
 	}
 	
 	function weak_url_check($url){

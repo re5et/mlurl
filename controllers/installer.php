@@ -48,6 +48,7 @@
 				$config_output  = "<?php\n\n";
 				$config_output .= "\t //general settings\n";
 				$config_output .= "\t" . '$config' . "['site_url'] = '" . addcslashes($_POST['site_url'], "'") . "';\n";
+				$config_output .= "\t" . '$config' . "['redirect_url'] = '" . addcslashes($_POST['site_url'], "'") . "';\n";
 				$config_output .= "\t" . '$config' . "['password_salt'] = '" . $this->salt . "';\n";
 				$config_output .= "\n\t //database config\n";
 				$config_output .= "\t" . '$config' . "['database']['db_host'] = '" . addcslashes($db->db_host, "'") . "';\n";

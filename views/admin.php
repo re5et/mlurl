@@ -9,8 +9,8 @@
 		<label for="permission">permission:</label>
 		<select name="permission" id="permission">
 			<option value="9">administrate</option>
-			<option value="2">make links + view stats</option>
-			<option value="1">make links</option>
+			<option value="3">make links + view stats</option>
+			<option value="2">make links</option>
 		</select>
 	</p>
 	<p class="submit">

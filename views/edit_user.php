@@ -10,11 +10,11 @@
 		<select name="permission" id="permission">
 			<option value="9"<?php if($permission >= 9) echo ' selected="selected"' ?>>administrate</option>
 			<option value="3"<?php if($permission == 3) echo ' selected="selected"' ?>>make links + view stats</option>
-			<option value="3"<?php if($permission == 2) echo ' selected="selected"' ?>>make links</option>
+			<option value="2"<?php if($permission == 2) echo ' selected="selected"' ?>>make links</option>
 		</select>
 	</p>
 	<p class="submit">
-		<input type="submit" name="update_user" value="update user &raquo;" /> or <a id="reset-password" href="<?php echo $this->url ?>/?mlurl&tab=edit_user&user=<?php echo $id ?>&reset_password">reset password</a>
+		<input type="submit" name="update_user" value="update user &raquo;" />
 	</p>
 </form>
 <?php $this->view('footer') ?>
